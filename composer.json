@@ -1,0 +1,54 @@
+{
+    "name": "involvedgroup/laravel-translation-genie",
+    "description": "Manage all your Laravel shortcode-, string- and Vue i18n translations. Scan for new translations in your code, sync between languages and create Vue i18n translation sets.",
+    "keywords": [
+        "involvedgroup",
+        "laravel-translation-genie"
+    ],
+    "homepage": "https://github.com/involvedgroup/laravel-translation-genie",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Stef Rouschop",
+            "email": "stef.rouschop@involved.group",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "illuminate/support": "5.7.*"
+    },
+    "require-dev": {
+        "orchestra/testbench": "3.7.*",
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "InvolvedGroup\\LaravelTranslationGenie\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "InvolvedGroup\\LaravelTranslationGenie\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "InvolvedGroup\\LaravelTranslationGenie\\LaravelTranslationGenieServiceProvider"
+            ],
+            "aliases": {
+                "LaravelTranslationGenie": "InvolvedGroup\\LaravelTranslationGenie\\LaravelTranslationGenieFacade"
+            }
+        }
+    }
+}
