@@ -3,8 +3,9 @@
 namespace InvolvedGroup\LaravelTranslationGenie;
 
 use Illuminate\Support\ServiceProvider;
+use InvolvedGroup\LaravelTranslationGenie\Console\Commands\Scan;
 
-class LaravelTranslationGenieServiceProvider extends ServiceProvider
+class TranslationGenieServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -21,7 +22,7 @@ class LaravelTranslationGenieServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('laravel-translation-genie.php'),
+                __DIR__.'/../config/config.php' => config_path('translation-genie.php'),
             ], 'config');
 
             // Publishing the views.
@@ -40,7 +41,9 @@ class LaravelTranslationGenieServiceProvider extends ServiceProvider
             ], 'lang');*/
 
             // Registering package commands.
-            // $this->commands([]);
+             $this->commands([
+                 Scan::class,
+             ]);
         }
     }
 
@@ -50,11 +53,7 @@ class LaravelTranslationGenieServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-translation-genie');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'translation-genie');
 
-        // Register the main class to use with the facade
-        $this->app->singleton('laravel-translation-genie', function () {
-            return new LaravelTranslationGenie;
-        });
     }
 }
