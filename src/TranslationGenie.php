@@ -25,19 +25,18 @@ class TranslationGenie
      * @param array $methods
      * @return array
      */
-    private function scan(array $paths, array $methods)
+    public function scan(array $paths, array $methods)
     {
         $scanner = new Scanner(new Filesystem, $paths, $methods);
 
         return $scanner->findTranslations();
     }
 
-    private function mergeAllPaths(): array
+    public function mergeAllPaths(): array
     {
-        $paths = config('translation-genie.laravel_scan_path');
-
+        $paths = config('translation-genie.laravel_scan_paths');
         foreach (config('translation-genie.vue_sets') as $set) {
-            foreach ($set['paths'] as $path) {
+            foreach ($set['scan_paths'] as $path) {
                 $paths[] = $path;
             }
         }
@@ -45,11 +44,11 @@ class TranslationGenie
         return collect($paths)->unique()->toArray();
     }
 
-    private function mergeAllMethods(): array
+    public function mergeAllMethods(): array
     {
         $methods = config('translation-genie.laravel_translation_methods');
 
-        foreach (config('translation-genie.vue_sets') as $set) {
+        foreach (config('translation-genie.vue_sets', []) as $set) {
             foreach ($set['methods'] as $method) {
                 $methods[] = $method;
             }

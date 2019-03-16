@@ -6,13 +6,18 @@
 return [
     'laravel_translation_methods' => ['trans','__','@lang','trans_choice'],
 
-    'laravel_scan_path' => [app_path(), resource_path()],
+    'laravel_scan_paths' => [app_path(), resource_path()],
 
     'vue_sets' => [
         [
-            'name' => 'front',
             'methods' => ['\$t'],
-            'paths' => [resource_path('js')]
-        ]
+            'scan_paths' => [resource_path('js')],
+            'store_path' => public_path('js/front'),
+        ],
+//        [
+//            'methods' => ['\$t'],
+//            'scan_paths' => [resource_path('js/admin')],
+//            'store_path' => public_path('js/admin'),
+//        ]
     ]
 ];
