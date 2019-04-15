@@ -12,7 +12,7 @@ return [
         [
             'methods' => ['\$t'],
             'scan_paths' => [resource_path('js')],
-            'store_path' => public_path('js/front'),
+            'store_path' => resource_path('js/admin/translations'),
         ],
 //        [
 //            'methods' => ['\$t'],

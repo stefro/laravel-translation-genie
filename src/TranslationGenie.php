@@ -7,6 +7,8 @@ use InvolvedGroup\LaravelTranslationGenie\Services\Scanner;
 
 class TranslationGenie
 {
+    protected $i18n_filename = 'vue-i18n-translations.js';
+
     public function scanAll()
     {
         $paths = $this->mergeAllPaths();
@@ -16,8 +18,8 @@ class TranslationGenie
     }
 
     /**
-     * @param array $paths
-     * @param array $methods
+     * @param  array  $paths
+     * @param  array  $methods
      * @return array
      */
     public function scan(array $paths, array $methods)
@@ -66,7 +68,7 @@ class TranslationGenie
     {
         $single = collect($this->scanAll()['single']);
 
-        $this->getTranslationJsonFiles()->each(function($file) use ($single) {
+        $this->getTranslationJsonFiles()->each(function ($file) use ($single) {
             $this->updateSingleTranslationFile($file, $single);
         });
 
@@ -80,6 +82,43 @@ class TranslationGenie
         $new = $filecontent->merge($diff)->sortKeys();
 
         file_put_contents($file, json_encode($new, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    }
+
+    public function updateJSFiles()
+    {
+        foreach (config('translation-genie.vue_sets') as $set) {
+            $this->updateVueSet($set);
+        }
+    }
+
+    private function updateVueSet($set)
+    {
+        $keys = $this->scan($set['scan_paths'], $set['methods'])['single'];
+
+        $filename = $set['store_path'].DIRECTORY_SEPARATOR.$this->i18n_filename;
+        $data = $this->i18nData($keys);
+
+        file_put_contents($filename, "export default {$data}");
+    }
+
+    private function i18nData($keys)
+    {
+        $data = collect($this->getTranslationJsonFiles())->flatMap(function ($file) use ($keys) {
+            $key = str_replace('.json', '', $file->getFilename());
+
+            $selected_content = collect(json_decode($file->getContents()))
+                ->filter(function ($value, $key) use ($keys) {
+                    return isset($keys[$key]);
+                })->filter(function($value){
+                    return $value != '';
+                });
+
+            return [
+                $key => $selected_content
+            ];
+        });
+
+        return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
 
 }

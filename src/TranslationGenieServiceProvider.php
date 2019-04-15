@@ -4,7 +4,8 @@ namespace InvolvedGroup\LaravelTranslationGenie;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
-use InvolvedGroup\LaravelTranslationGenie\Console\Commands\Scan;
+use InvolvedGroup\LaravelTranslationGenie\Console\Commands\UpdateMasterFiles;
+use InvolvedGroup\LaravelTranslationGenie\Console\Commands\UpdateVuei18nFiles;
 
 class TranslationGenieServiceProvider extends ServiceProvider
 {
@@ -43,7 +44,8 @@ class TranslationGenieServiceProvider extends ServiceProvider
 
             // Registering package commands.
              $this->commands([
-                 Scan::class,
+                 UpdateMasterFiles::class,
+                 UpdateVuei18nFiles::class,
              ]);
         }
     }

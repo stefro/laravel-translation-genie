@@ -5,14 +5,14 @@ namespace InvolvedGroup\LaravelTranslationGenie\Console\Commands;
 use Illuminate\Console\Command;
 use InvolvedGroup\LaravelTranslationGenie\TranslationGenie;
 
-class Scan extends Command
+class UpdateMasterFiles extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'translation-genie:update';
+    protected $signature = 'translation-genie:update-masterfiles';
 
     /**
      * The console command description.
