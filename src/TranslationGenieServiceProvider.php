@@ -2,6 +2,7 @@
 
 namespace InvolvedGroup\LaravelTranslationGenie;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 use InvolvedGroup\LaravelTranslationGenie\Console\Commands\Scan;
 

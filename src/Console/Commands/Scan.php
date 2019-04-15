@@ -12,7 +12,7 @@ class Scan extends Command
      *
      * @var string
      */
-    protected $signature = 'translation-genie:scan';
+    protected $signature = 'translation-genie:update';
 
     /**
      * The console command description.
@@ -38,6 +38,6 @@ class Scan extends Command
      */
     public function handle()
     {
-        return (new TranslationGenie())->scanAll();
+        return (new TranslationGenie())->updateTranslationFiles();
     }
 }

@@ -12,12 +12,7 @@ class TranslationGenie
         $paths = $this->mergeAllPaths();
         $methods = $this->mergeAllMethods();
 
-        $test = collect($this->scan($paths, $methods)['single']['single']);
-
-        dd($test->sortKeys());
-
-        dd($this->scan($paths, $methods));
-
+        return $this->scan($paths, $methods);
     }
 
     /**
@@ -55,6 +50,36 @@ class TranslationGenie
         }
 
         return collect($methods)->unique()->toArray();
+    }
+
+    public function getTranslationJsonFiles()
+    {
+        $disk = new Filesystem();
+
+        return collect($disk->allFiles('resources/lang'))
+            ->filter(function ($file) use ($disk) {
+                return $disk->extension($file) == 'json';
+            });
+    }
+
+    public function updateTranslationFiles()
+    {
+        $single = collect($this->scanAll()['single']);
+
+        $this->getTranslationJsonFiles()->each(function($file) use ($single) {
+            $this->updateSingleTranslationFile($file, $single);
+        });
+
+    }
+
+    private function updateSingleTranslationFile($file, $single)
+    {
+        $filecontent = collect(json_decode($file->getContents()));
+        $diff = $single->diffKeys($filecontent);
+
+        $new = $filecontent->merge($diff)->sortKeys();
+
+        file_put_contents($file, json_encode($new, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
 
 }
