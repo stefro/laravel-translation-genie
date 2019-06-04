@@ -1,5 +1,5 @@
 {
-    "name": "involvedgroup/laravel-translation-genie",
+    "name": "involved-group/laravel-translation-genie",
     "description": "Manage all your Laravel shortcode-, string- and Vue i18n translations. Scan for new translations in your code, sync between languages and create Vue i18n translation sets.",
     "keywords": [
         "involvedgroup",

@@ -7,7 +7,7 @@ use InvolvedGroup\LaravelTranslationGenie\Services\Scanner;
 
 class TranslationGenie
 {
-    protected $i18n_filename = 'vue-i18n-translations.js';
+    protected $i18n_filename = 'vue-i18n-translations';
 
     public function scanAll()
     {
@@ -87,18 +87,35 @@ class TranslationGenie
     public function updateJSFiles()
     {
         foreach (config('translation-genie.vue_sets') as $set) {
-            $this->updateVueSet($set);
+            $this->prepareSet($set);
         }
     }
 
-    private function updateVueSet($set)
+    protected function prepareSet($set)
     {
-        $keys = $this->scan($set['scan_paths'], $set['methods'])['single'];
+        if(!file_exists($set['store_path'])){
+            if (!mkdir($concurrentDirectory = $set['store_path']) && !is_dir($concurrentDirectory)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+            }
+        }
 
-        $filename = $set['store_path'].DIRECTORY_SEPARATOR.$this->i18n_filename;
-        $data = $this->i18nData($keys);
+        if(config('translation-genie.single_file')){
+            $this->updateVueSetSingleFile($set);
+        } else {
+            $this->updateMultiFile($set);
+        }
+    }
 
-        file_put_contents($filename, "export default {$data}");
+    private function updateVueSetSingleFile($set)
+    {
+        $filename = $set['store_path'].DIRECTORY_SEPARATOR.$this->i18n_filename.'.js';
+        if (!file_exists($filename)) {
+            fopen($filename, "w");
+        }
+
+        $data = $this->getKeysAndTranslations($set);
+
+        file_put_contents($filename, "export default {$this->jsonPrettyPrint($data)}");
     }
 
     private function i18nData($keys)
@@ -118,6 +135,39 @@ class TranslationGenie
             ];
         });
 
+        return $data;
+    }
+
+    private function updateMultiFile($set)
+    {
+        $data = $this->getKeysAndTranslations($set);
+        dump($data);
+    }
+
+    /**
+     * @param $set
+     * @return false|string
+     */
+    private function getKeysAndTranslations($set)
+    {
+        $keys = $this->scan($set['scan_paths'], $set['methods'])['single'];
+
+        $data = $this->i18nData($keys);
+
+        $data->each(function($translations, $lang) use ($set) {
+            $filename = $set['store_path'].DIRECTORY_SEPARATOR.$this->i18n_filename.'-'.$lang.'.js';
+            if (!file_exists($filename)) {
+                fopen($filename, "w");
+            }
+            file_put_contents($filename, "export default {$this->jsonPrettyPrint($translations)}");
+        });
+    }
+
+    /**
+     * @return false|string
+     */
+    private function jsonPrettyPrint($data)
+    {
         return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
 
