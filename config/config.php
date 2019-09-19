@@ -8,6 +8,8 @@ return [
 
     'laravel_scan_paths' => [app_path(), resource_path()],
 
+    'single_file' => true,
+
     'vue_sets' => [
         [
             'methods' => ['\$t'],
