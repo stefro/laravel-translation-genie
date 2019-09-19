@@ -113,7 +113,9 @@ class TranslationGenie
             fopen($filename, "w");
         }
 
-        $data = $this->getKeysAndTranslations($set);
+        $keys = $this->scan($set['scan_paths'], $set['methods'])['single'];
+
+        $data = $this->i18nData($keys);
 
         file_put_contents($filename, "export default {$this->jsonPrettyPrint($data)}");
     }
@@ -141,7 +143,6 @@ class TranslationGenie
     private function updateMultiFile($set)
     {
         $data = $this->getKeysAndTranslations($set);
-        dump($data);
     }
 
     /**
