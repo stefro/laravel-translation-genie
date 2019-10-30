@@ -19,9 +19,12 @@ composer require involvedgroup/laravel-translation-genie
 
 ## Usage
 
-``` php
-// Usage description here
-```
+There are two artisan commands:
+`php artisan translation-genie:update-masterfiles`
+This will scan al PHP **AND** JS files and search for translation keys. It will store them in the default Laravel language JSON files.
+
+`php artisan translation-genie:update-js-files`
+This command needs to be run **AFTER** the Laravel master JSON files are translated. With this command, a JS translation file will be created that will be used by vue-i18n.
 
 ### Testing
 
