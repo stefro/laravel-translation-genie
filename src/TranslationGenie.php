@@ -79,6 +79,14 @@ class TranslationGenie
         $filecontent = collect(json_decode($file->getContents()));
         $diff = $single->diffKeys($filecontent);
 
+        // If the language file is the default locale, we'll make sure the value is the same as the key.
+        $language = explode('.', $file->getFilename())[0];
+        if($language == config('app.locale')){
+            foreach($diff as $key => $value){
+                $diff[$key] = $key;
+            }
+        }
+
         $new = $filecontent->merge($diff)->sortKeys();
 
         file_put_contents($file, json_encode($new, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
